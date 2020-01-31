@@ -1,0 +1,45 @@
+# Env variables
+.env*
+
+# compiled output
+dist
+dist-server
+tmp
+out-tsc
+build
+
+# dependencies
+node_modules
+
+# IDEs and editors
+.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode
+
+# misc
+.sass-cache
+connect.lock
+coverage
+libpeerconnection.log
+npm-debug.log*
+testem.log
+typings
+logs
+*.log
+yarn-error.log*
+yarn-debug.log*
+.yarn-integrity
+*.tgz
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# System Files
+.DS_Store
+Thumbs.db

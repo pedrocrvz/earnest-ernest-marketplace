@@ -1,0 +1,36 @@
+{
+  "name": "earnest-ernest-marketplace",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Pedro Cruz <pedrocrvz@gmail.com>",
+  "license": "Apache 2.0",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "scripts": {
+    "test": "truffle test test/*",
+    "migrate": "truffle migrate",
+    "compile": "truffle compile",
+    "coverage": "solidity-coverage",
+    "format:sol": "prettier --write 'contracts/**/*.sol'",
+    "format:js": "prettier --write 'test/**/*.js' 'migrations/*.js' 'scripts/**/*.js'",
+    "format": "npm run format:sol & npm run format:js"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^2.4.0",
+    "@openzeppelin/contracts-ethereum-package": "^2.4.0",
+    "@openzeppelin/upgrades": "^2.6.0",
+    "chai": "^4.2.0",
+    "chai-shallow-deep-equal": "^1.4.6",
+    "ethereumjs-abi": "^0.6.8",
+    "openzeppelin-test-helpers": "^0.5.1"
+  },
+  "devDependencies": {
+    "prettier": "^1.19.1",
+    "prettier-plugin-solidity": "^1.0.0-alpha.36"
+  }
+}
