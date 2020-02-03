@@ -205,6 +205,23 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
             }
         }
         storesAddresses.length = storesAddresses.length.sub(1);
+
+        for (
+            uint256 i = 0;
+            i < storesByOwner[_store.owner].length.sub(1);
+            i++
+        ) {
+            if (storesByOwner[_store.owner][i] == _id) {
+                storesByOwner[_store.owner][i] = storesByOwner[_store
+                    .owner][storesByOwner[_store.owner].length.sub(1)];
+                break;
+            }
+        }
+
+        storesByOwner[_store.owner].length = storesByOwner[_store.owner]
+            .length
+            .sub(1);
+
         removeStoreOwner(_store.owner);
         delete stores[_id];
         emit StoreRemoved(_id);
@@ -226,8 +243,10 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
      * @param _owner The owner address
      */
     function removeStoreOwner(address _owner) internal {
-        isStoreOwner[_owner] = false;
-        emit StoreOwnerRemoved(_owner);
+        if (storesByOwner[_owner].length == 0) {
+            isStoreOwner[_owner] = false;
+            emit StoreOwnerRemoved(_owner);
+        }
     }
 
     /**

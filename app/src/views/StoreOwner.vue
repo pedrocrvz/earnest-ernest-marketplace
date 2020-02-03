@@ -127,7 +127,7 @@
                 </div>
                 <div v-else class="col-lg-12 col-md-6" v-for="(product, index) in products" :key="index">
                   <button
-                    @click=";(updateProduct = product), (showUpdateProductModal = true)"
+                    @click=";(productId = product.id), (productToUpdate = product), (showUpdateProductModal = true)"
                     type="button"
                     class="btn-icon-clipboard"
                   >
@@ -174,7 +174,7 @@
 
             <form role="form" v-if="!productUpdated">
               <div class="text-center text-muted mb-4">
-                {{ updateProduct.name }}
+                {{ productToUpdate.name }}
               </div>
               <base-input class="input-group-alternative mb-3" placeholder="Product Name" v-model="updateProduct.name">
               </base-input>
@@ -225,7 +225,9 @@ export default {
   data: () => ({
     currentAddress: '',
     storeId: '',
+    productId: '',
     storeBalance: '',
+    productToUpdate: {},
     products: [],
     store: {},
     newProduct: {},
@@ -344,25 +346,30 @@ export default {
           await Store.methods.updateProductName(this.productId, this.updateProduct.name).send({
             from: this.currentAddress,
           })
+          this.productUpdated = true
         }
         if (this.updateProduct.description !== undefined) {
           await Store.methods.updateProductDescription(this.productId, this.updateProduct.description).send({
             from: this.currentAddress,
           })
+          this.productUpdated = true
         }
         if (this.updateProduct.quantity !== undefined) {
           await Store.methods.updateProductQuantity(this.productId, this.updateProduct.quantity).send({
             from: this.currentAddress,
           })
+          this.productUpdated = true
         }
         if (this.updateProduct.price !== undefined) {
           await Store.methods.updateProductPrice(this.productId, this.updateProduct.price).send({
             from: this.currentAddress,
           })
+          this.productUpdated = true
         }
 
         this.updateProduct = {}
-        this.productUpdated = true
+        this.productToUpdate = {}
+
         this.init()
       } catch (error) {
         console.log(error)

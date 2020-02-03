@@ -174,6 +174,9 @@ export default {
         await Store.methods.buyProduct(this.productSelected.id, this.quantity).send({
           value: web3.utils.fromWei(total.toString(), 'wei'),
           from: this.currentAddress,
+
+          gasPrice: '0x09184e72a000', // customizable by user during MetaMask confirmation.
+          gas: '0x21000',
         })
 
         this.bougth = true

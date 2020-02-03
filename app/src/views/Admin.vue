@@ -243,11 +243,11 @@
             </div>
           </template>
           <div v-else class="text-center text-muted mb-4">
-            <h3 class="mb-0">Request reject!</h3>
+            <h3 class="mb-0">Done!</h3>
             <base-button
               type="primary"
               @click="
-                requestRejected = false
+                requestAccepted = false
                 showRequestModal = false
               "
               class="my-4"
@@ -322,7 +322,6 @@ export default {
     adminMultisig: '',
     storesRequested: [],
     requestAccepted: false,
-    requestRejected: false,
     showRequestModal: false,
     storeUpdated: false,
     showStoreModal: false,
@@ -498,6 +497,7 @@ export default {
         })
 
         this.getStoresRequests()
+        this.getStores()
         this.requestAccepted = true
       } catch (error) {
         console.log(error)
@@ -580,7 +580,7 @@ export default {
         })
 
         this.getStoresRequests()
-        this.requestRejected = true
+        this.requestAccepted = true
       } catch (error) {
         console.log(error)
       }
