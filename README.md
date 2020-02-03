@@ -1,50 +1,83 @@
 # Earnest Ernest Marketplace
 
-Decentralized marketplace controlled by a multisig wallet. Owner of the multisig wallet are the admins of the marketplace.
-Admins can create/ban/remove stores.
-Users can buy products or request to open a new store.
-Store owners can create/update/remove products and withdraw the store balance to thei account.
+Decentralized marketplace written in Solidity.
 
-# Requirements
+## Requirements
 
 - [Truffle](https://www.trufflesuite.com/truffle) (npm install -g truffle)
 - [Ganache](https://www.trufflesuite.com/ganache)
   - CLI (npm install -g ganache-cli) or [GUI](https://www.trufflesuite.com/ganache)
 - [MetaMask](https://metamask.io)
+- [Node.js](https://nodejs.org/en/)
 
-## User Interface Requirements:
+## Installation
 
-- [x] Run the app on a dev server locally for testing/grading
-- [x] You should be able to visit a URL and interact with the application
-  - [x] App recognizes current account
-  - [x] Sign transactions using MetaMask or uPort
-  - [x] Contract state is updated
-  - [x] Update reflected in UI
+Once you have Node.js, truffle, ganache and Metamask installed in your system, follow the steps:
 
-## Test Requirements:
+Clone Earnest Ernest Marketplace's repository:
 
-- [x] Write 5 tests for each contract you wrote
-  - [x] Solidity or JavaScript
-- [x] Explain why you wrote those tests
-- [x] Tests run with truffle test
+```
+git clone https://github.com/pedrocrvz/earnest-ernest-marketplace.git
+cd earnest-ernest-marketplace
+```
 
-## Design Pattern Requirements:
+Install dependencies:
 
-- [x] Implement a circuit breaker (emergency stop) pattern
-- [x] What other design patterns have you used / not used?
-  - [x] Why did you choose the patterns that you did?
-  - [x] Why not others?
+```
+npm install
+```
 
-## Security Tools / Common Attacks:
+Start ganache (GUI or CLI):
 
-- [x] Explain what measures you’ve taken to ensure that your contracts are not susceptible to common attacks
+```
+ganache-cli
+```
 
-## Use a library or extend a contract
+Compile contracts:
 
-- [x] Via EthPM or write your own
+```
+truffle compile
+```
 
-## Other
+## Tests
 
-- [x] Deploy your smart contract(s) onto one of the test (i.e. Rinkeby, Ropsten) networks.
-- [x] Include a document called deployed_addresses.txt that describes where your contracts live (which testnet and address).
-      Evaluators can check the appropriate testnet etherscan at the provided addresses to verify deployment
+All the tests are placed in the folde `tests`. To run all tests type:
+
+```
+truffle test
+```
+
+## Run Project
+
+First we need to migrate the contract:
+
+```
+truffle migrate
+```
+
+Then we need to initiate our app to serve as a GUI to interact with the contracts:
+
+```
+cd app
+npm run start
+```
+
+Note: The migrations file is configured to add new stores after the marketplace deployment to ease testing. To start with an empty marketplace you can simply remove the stores adition in file `2_initial_migration.js`.
+
+## Docs
+
+All the required documentation are located at the folder `docs`.
+
+## Roles
+
+### Marketplace Admins
+
+The marketplace is controlled by a multisig wallet. The owners of the multisig wallet are the admins of the marketplace. Admins can create/ban/remove stores.
+
+### Shoppers/Users
+
+Users can buy products or request to open a new store.
+
+### Store Owners
+
+Store owners can create/update/remove products, withdraw the store balance to their account. and destroy the store
