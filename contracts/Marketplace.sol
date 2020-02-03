@@ -24,6 +24,8 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
     event StoreRequested(string name, address owner);
     event StoreRemoved(address id);
     event MarketplaceDestroyed(address marketplace, address receiver);
+    event StoreRequestRemoved(address owner);
+    event StoreStatusChanged(address _id, bool _status)
 
     /*
      *  Storage
@@ -133,6 +135,7 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
             }
         }
         storesRequestsOwners.length = storesRequestsOwners.length.sub(1);
+        emit StoreRequestRemoved(_owner);
     }
 
     /**
@@ -256,6 +259,7 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
      */
     function setBanStatus(address _id, bool _status) public onlyWallet {
         stores[_id].isBanned = _status;
+        emit StoreStatusChanged(_id, _status)
     }
 
     /**
