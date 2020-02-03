@@ -79,8 +79,6 @@ contract('Marketplace Upgradable', ([owner, holder1, holder2, holder3]) => {
       await multisig.submitTransaction(marketplace.address, 0, data, {
         from: owner,
       })
-    })
-    it('should have the implementatiom address updated', async () => {
       const _impl = await marketplaceProxy.implementation()
       assert.equal(_impl, marketplaceImplV2.address)
     })

@@ -55,7 +55,7 @@ contract('Store', ([owner, storeOwner1, storeOwner2, holder3]) => {
         assert.ok(error.toString().search('revert') > 0, 'transaction reverted')
       }
     })
-    it('should add a new store via multisig', async () => {
+    it('should add a new store via multisig and get the stores addresses', async () => {
       const dataCreateStore = await encodeCall(
         'addStore',
         ['string', 'string', 'address'],
@@ -64,8 +64,6 @@ contract('Store', ([owner, storeOwner1, storeOwner2, holder3]) => {
       await multisig.submitTransaction(marketplace.address, 0, dataCreateStore, {
         from: owner,
       })
-    })
-    it('should get the stores addresses', async () => {
       const _storesAddresses = await marketplace.getStoresAddresses()
       storeId = _storesAddresses[0]
       //initialize store
@@ -226,7 +224,7 @@ contract('Store', ([owner, storeOwner1, storeOwner2, holder3]) => {
         assert.ok(error.toString().search('revert') > 0, 'transaction reverted')
       }
     })
-    it('should destroy marketplace', async () => {
+    it('should destroy marketplace and return an error when getting store pause status', async () => {
       const dataCreateStore = await encodeCall(
         'destroy',
         ['address'],
@@ -235,8 +233,6 @@ contract('Store', ([owner, storeOwner1, storeOwner2, holder3]) => {
       await multisig.submitTransaction(marketplace.address, 0, dataCreateStore, {
         from: owner,
       })
-    })
-    it('should return an error when getting store pause status', async () => {
       try {
         await marketplace.paused()
       } catch (error) {
