@@ -78,7 +78,7 @@ cd app
 npm run serve
 ```
 
-Next open the MetaMask extension and then click "Restore from seed phrase" and use the see phrase displayed in ganache ganache. Make sure to have at least 3 accounts available (if you only have one, click "Create Account" on MetaMask and add more accounts). The first account is the owner of the multisig and the marketplace admin. Second and third accounts are already registered as stores owners to facilidate and ease demonstration.
+Next open the MetaMask extension and then click "Restore from seed phrase" and use the see phrase displayed in ganache. Make sure to have at least 3 accounts available (if you only have one, click "Create Account" on MetaMask and add more accounts). The first account is the owner of the multisig and the marketplace admin. Second and third accounts are already registered as stores owners to facilidate and ease demonstration.
 
 Note: The migrations file is configured to add new stores after the marketplace deployment to ease testing. To start with an empty marketplace you can simply remove the stores adition in file `2_initial_migration.js`.
 
@@ -92,10 +92,16 @@ All the required documentation are located at the folder `docs`.
 
 The marketplace is controlled by a multisig wallet. The owners of the multisig wallet are the admins of the marketplace. Admins can create/ban/remove stores.
 
+<img src="docs/img/admin.png " alt="adminview" width="700"/>
+
 ### Shoppers/Users
 
 Users can buy products or request to open a new store.
 
+<img src="docs/img/dashboard.png " alt="dashboard" width="700"/>
+
 ### Store Owners
 
-Store owners can create/update/remove products, withdraw the store balance to their account. and destroy the store
+Store owners can create/update/remove products, withdraw the store balance to their account and destroy the store.
+
+<img src="docs/img/storeowner.png " alt="storeowner" width="700"/>

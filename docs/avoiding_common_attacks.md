@@ -8,7 +8,7 @@ The use of `transfer()` is used to transfer ETH and there aren't any external ca
 
 Order is not a big issue in this project, miners can not influence directly the outcome of execution as no function relies on order to correctly execute. The only function that may be affected by this is the `withdraw`, as if order is different the balance may be differetn, however is not a big issue because the owner can withdraw whenever he wants and only him can do it.
 
-This project does not rely on dates or date variable that can be manipuled. Although `block.timestamp` is used, it does not affect in any way the execution. It is simply used as a timestamp to generate a random id for the products: `bytes32 _id = keccak256( abi.encodePacked(_name, _quantity, block.timestamp));`, so it's not important if the date is correct but that it provides differents inputs.
+This project does not have logic relying on dates or dates variables that can be manipuled. Although `block.timestamp` is used, it does not affect in any way the execution. It is simply used as a timestamp to generate a random id for the products: `bytes32 _id = keccak256( abi.encodePacked(_name, _quantity, block.timestamp));`, so it's not important if the date is correct but that it provides differents inputs.
 
 ## Integer Overflow and Underflow
 
@@ -16,7 +16,7 @@ Use of SafeMath library avoid over/underflows in arithmetic operations.
 
 ## DoS with (Unexpected) revert & Block Gas Limit
 
-We use pull over push to protect from this kind of attacks.
+Used pull over push to protect from this kind of attacks.
 
 ### Forcibly Sending Ether to a Contract
 
@@ -37,7 +37,7 @@ All function visibility is explicitly marked. Only variables that make sense are
 
 ### Lock pragmas to specific compiler version
 
-All contract are loacked using `pragma solidity 0.5.2;`.
+All contracts are locked using `pragma solidity 0.5.2;`.
 
 ### Avoid using tx.origin
 
