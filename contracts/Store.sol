@@ -33,49 +33,49 @@ contract Store {
     /*
      *  Events
      */
-    event Withdraw(address _id, uint256 _amount);
+    event Withdraw(address id, uint256 amount);
     event ProductAdded(
-        bytes32 _id,
-        string _name,
-        string _description,
-        uint256 _price,
-        uint256 _quantity
+        bytes32 id,
+        string name,
+        string description,
+        uint256 price,
+        uint256 quantity
     );
-    event ProductDeleted(bytes32 _id);
+    event ProductDeleted(bytes32 id);
     event ProductBought(
-        bytes32 _id,
-        string _name,
-        string _description,
-        uint256 _price,
-        uint256 _quantitiy
+        bytes32 id,
+        string name,
+        string description,
+        uint256 price,
+        uint256 quantitiy
     );
-    event ProductPriceUpdated(
-        bytes32 _id,
-        uint256 _oldPrice,
-        uint256 _newPrice
-    );
-    event ProductNameUpdated(bytes32 _id, string _oldName, string _newName);
+    event ProductPriceUpdated(bytes32 id, uint256 oldPrice, uint256 newPrice);
+    event ProductNameUpdated(bytes32 id, string oldName, string newName);
     event ProductQuantityUpdated(
-        bytes32 _id,
-        uint256 _oldQuantity,
-        uint256 _newQuantity
+        bytes32 id,
+        uint256 oldQuantity,
+        uint256 newQuantity
     );
     event ProductDescriptionUpdated(
-        bytes32 _id,
-        string _oldDescription,
-        string _newDescription
+        bytes32 id,
+        string oldDescription,
+        string newDescription
     );
+    event StoreRemoved(address id);
 
     /*
      *  Modifiers
      */
     modifier onlyOwner() {
-        require(msg.sender == owner);
+        require(msg.sender == owner, "msg.sender is not owner");
         _;
     }
 
-    modifier onlyMarketplace() {
-        require(msg.sender == address(marketplace));
+    modifier onlyMarketplaceOrOwner() {
+        require(
+            msg.sender == address(marketplace) || msg.sender == owner,
+            "msg.sender is not owner or the marketplace"
+        );
         _;
     }
 
@@ -91,6 +91,11 @@ contract Store {
 
     modifier notBanned() {
         require(!marketplace.isBanned(address(this)), "Store is banned");
+        _;
+    }
+
+    modifier whenNotPaused() {
+        require(!marketplace.paused(), "Store is paused");
         _;
     }
 
@@ -134,7 +139,7 @@ contract Store {
         string memory _description,
         uint256 _price,
         uint256 _quantity
-    ) public onlyOwner notBanned returns (bytes32) {
+    ) public onlyOwner notBanned whenNotPaused returns (bytes32) {
         bytes32 _id = keccak256(
             abi.encodePacked(_name, _quantity, block.timestamp)
         );
@@ -160,6 +165,7 @@ contract Store {
         public
         onlyOwner
         notBanned
+        whenNotPaused
         productExists(_id)
     {
         Product storage _product = products[_id];
@@ -177,6 +183,7 @@ contract Store {
         public
         onlyOwner
         notBanned
+        whenNotPaused
         productExists(_id)
     {
         Product storage _product = products[_id];
@@ -193,7 +200,7 @@ contract Store {
     function updateProductDescription(
         bytes32 _id,
         string memory _newDescription
-    ) public onlyOwner notBanned productExists(_id) {
+    ) public onlyOwner notBanned productExists(_id) whenNotPaused {
         Product storage _product = products[_id];
         string memory _oldDescription = _product.description;
         _product.description = _newDescription;
@@ -210,6 +217,7 @@ contract Store {
         onlyOwner
         notBanned
         productExists(_id)
+        whenNotPaused
     {
         Product storage _product = products[_id];
         uint256 _oldQuantity = _product.quantity;
@@ -226,6 +234,7 @@ contract Store {
         onlyOwner
         notBanned
         productExists(_id)
+        whenNotPaused
     {
         delete products[_id];
         for (uint256 i = 0; i < productsIds.length.sub(1); i++) {
@@ -250,6 +259,7 @@ contract Store {
         productExists(_id)
         hasStock(_id, _quantity)
         refund(_id, _quantity)
+        whenNotPaused
     {
         Product storage _product = products[_id];
         _product.quantity = _product.quantity.sub(_quantity);
@@ -307,10 +317,13 @@ contract Store {
     }
 
     /**
-     * @dev Allows marketplace to destroy store and send balance to store owner
+     * @dev Allows marketplace or store owner to destroy store and send balance to store owner
      */
-    function destroy() public onlyMarketplace {
+    function destroy() public onlyMarketplaceOrOwner {
+        marketplace.removeStoreDetails(address(this));
+
         selfdestruct(owner);
+        emit StoreRemoved(address(this));
     }
 
     /**

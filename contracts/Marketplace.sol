@@ -22,7 +22,8 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
     event StoreOwnerRemoved(address storeOwnerAddress);
     event StoreCreated(address id, string name, address owner);
     event StoreRequested(string name, address owner);
-    event Test(address owner);
+    event StoreRemoved(address id);
+    event MarketplaceDestroyed(address marketplace, address receiver);
 
     /*
      *  Storage
@@ -33,6 +34,7 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
     mapping(address => StoreDetails) private stores;
     mapping(address => address[]) private storesByOwner;
     mapping(address => bool) public isStoreOwner;
+    mapping(address => bool) public isStore;
 
     mapping(address => StoreRequest) private storesRequests;
     address[] private storesRequestsOwners;
@@ -61,6 +63,12 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
         _;
     }
 
+    modifier onlyStoreRemoval(address _id) {
+        require(isStore[msg.sender]);
+        require(msg.sender == _id);
+        _;
+    }
+
     modifier notNull(address _address) {
         require(_address != address(0));
         _;
@@ -76,6 +84,7 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
      * @param _wallet The multisig wallet
      */
     function initialize(address _wallet) public initializer {
+        Pausable.initialize(_wallet);
         wallet = _wallet;
     }
 
@@ -139,7 +148,6 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
         address payable _owner
     ) public onlyWallet notNull(_owner) whenNotPaused {
         address _id = deployStore(_owner);
-        emit Test(_owner);
 
         StoreDetails memory _storeDetails = StoreDetails(
             _id,
@@ -150,9 +158,10 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
         );
 
         addStoreOwner(_owner);
-        storesByOwner[_owner].push(_storeDetails.id);
+        isStore[_id] = true;
+        storesByOwner[_owner].push(_id);
         stores[_id] = _storeDetails;
-        storesAddresses.push(_storeDetails.id);
+        storesAddresses.push(_id);
 
         if (storesRequests[_owner].exists) {
             removeStoreRequest(_owner);
@@ -167,23 +176,38 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
     }
 
     /**
-     * @dev Allows to remove a store
+     * @dev Allows to remove a store details and destroy it
      * @param _id The address of the store to be removed
      */
     function removeStore(address payable _id) public onlyWallet whenNotPaused {
-        StoreDetails memory _store = stores[_id];
         Store _storeContract = Store(_id);
         _storeContract.destroy();
-        for (uint256 i = 0; i < storesAddresses.length - 1; i++) {
+    }
+
+    /**
+     * @dev Allows to remove store details
+     * @param _id The address of the store to be removed
+     */
+    function removeStoreDetails(address payable _id)
+        public
+        onlyStoreRemoval(_id)
+        whenNotPaused
+    {
+        isStore[_id] = false;
+        StoreDetails memory _store = stores[_id];
+
+        for (uint256 i = 0; i < storesAddresses.length.sub(1); i++) {
             if (storesAddresses[i] == _id) {
-                storesAddresses[i] = storesAddresses[storesAddresses.length -
-                    1];
+                storesAddresses[i] = storesAddresses[storesAddresses.length.sub(
+                    1
+                )];
                 break;
             }
         }
         storesAddresses.length = storesAddresses.length.sub(1);
         removeStoreOwner(_store.owner);
         delete stores[_id];
+        emit StoreRemoved(_id);
     }
 
     /**
@@ -191,9 +215,10 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
      * @param _owner The owner address
      */
     function addStoreOwner(address _owner) internal {
-        require(!isStoreOwner[_owner]);
-        isStoreOwner[_owner] = true;
-        emit StoreOwnerAdded(_owner);
+        if (!isStoreOwner[_owner]) {
+            isStoreOwner[_owner] = true;
+            emit StoreOwnerAdded(_owner);
+        }
     }
 
     /**
@@ -278,5 +303,17 @@ contract Marketplace is Initializable, Pausable, StoreFactory {
      */
     function getStoresAddresses() public view returns (address[] memory) {
         return storesAddresses;
+    }
+
+    /**
+     * @dev Allows to detroy the marketplace and all stores associated
+     * @param _receiver The receiver address of the Ether value of this contract
+     */
+    function destroy(address payable _receiver) public onlyWallet {
+        selfdestruct(_receiver);
+        for (uint256 i = 0; i < storesAddresses.length - 1; i++) {
+            removeStore(address(uint160(storesAddresses[i])));
+        }
+        emit MarketplaceDestroyed(address(this), _receiver);
     }
 }
