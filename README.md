@@ -78,7 +78,7 @@ cd app
 npm run serve
 ```
 
-Next open the MetaMask extension and then click "Restore from seed phrase" and use the see phrase displayed in ganache. Make sure to have at least 3 accounts available (if you only have one, click "Create Account" on MetaMask and add more accounts). The first account is the owner of the multisig and the marketplace admin. Second and third accounts are already registered as stores owners to facilidate and ease demonstration.
+Next open the MetaMask extension and then click "Restore from seed phrase" and use the seed phrase displayed in ganache. Connect MetaMask to ganache. Make sure to have at least 3 accounts available (if you only have one, click "Create Account" on MetaMask and add more accounts). The first account is the owner of the multisig and the marketplace admin. Second and third accounts are already registered as stores owners to facilidate and ease demonstration.
 
 Note: The migrations file is configured to add new stores after the marketplace deployment to ease testing. To start with an empty marketplace you can simply remove the stores adition in file `2_initial_migration.js`.
 
