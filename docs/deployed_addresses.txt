@@ -7,13 +7,13 @@ Deployed Contracts:
         - Etherscan tx: https://rinkeby.etherscan.io/tx/0x16ceeaa779d032a1066e34a824676db10765cdb49865f4772cad6ec25b2b9430
 
     - MultiSigWallet.sol: 
-        - Contract at 0xB71026C1Acf4a6Ddf4C7A7872CEE040aab9a96a4
-        - Etherscan tx: https://rinkeby.etherscan.io/tx/0x4452799171017b035a938a83010aaed9e30b5d09838b7cfb95902c68b3502a15
+        - Contract at 0x7440F10E2846Ea4E74eCDdf3419e4A6a58059bE4
+        - Etherscan tx: https://rinkeby.etherscan.io/tx/0x6ba6d546dc672eadc7f0b89112ae8e5fda5c3fcbb50f8e3465f92212138aeb53
 
     - Marketplace.sol: 
-        - Contract at 0x6fE48f55F9Ff92b1064f173f012d15A5B0711Cc6
-        - Etherscan tx: https://rinkeby.etherscan.io/tx/0x3d803059ec8413f058e9559ad316df2c98f830a380cb433a3942c0a2b54acc0e
+        - Contract at 0xBfAc78943Fa614abbb82F4e0287daa435C2FBE8c
+        - Etherscan tx: https://rinkeby.etherscan.io/tx/0xbb03e004b2f89725ab6e3bbe9b1ad86e9e57e363fa848f1aed5ed2547baa05b2
 
     - AdminUpgradeabilityProxy.sol: 
-        - Contract at 0x018825aA84088F88357b918930541c9688DED8dF
-        - Etherscan tx: https://rinkeby.etherscan.io/tx/0xa6d1d799ba07cc208949a76344a93f8cc21f4566b21e8e9557e46123945b1ae7
+        - Contract at 0xD5BA71Fd2916180Ea1AaB49A3318cC6846060b92
+        - Etherscan tx: https://rinkeby.etherscan.io/tx/0xdd329d4139c69764e866670069675a273001776c9730e7764b9a5d0820430a7e

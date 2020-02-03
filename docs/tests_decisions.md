@@ -1,3 +1,11 @@
+Test are divided in 3 files and are all situated in the `tests` folder:
+
+- Marketplace.js
+- Marketplace.upgradeability.js
+- Store.js
+
+All the test are documented with a sentenc describing the purpose of the test. All tests are done in javascript.
+
 Expected output
 
 ```
