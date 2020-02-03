@@ -12,16 +12,16 @@ Decentralized marketplace written in Solidity.
 
 ## Installation
 
-Once you have Node.js, truffle, ganache and Metamask installed in your system, follow the steps:
+Once you have Node.js, Truffle, Ganache and Metamask installed in your system, follow the steps:
 
 Clone Earnest Ernest Marketplace's repository:
-
-### Contracts
 
 ```
 git clone https://github.com/pedrocrvz/earnest-ernest-marketplace.git
 cd earnest-ernest-marketplace
 ```
+
+### Contracts
 
 Install dependencies:
 
@@ -43,7 +43,7 @@ truffle compile
 
 ### App
 
-Naviagte to folder `app`:
+Navigate to `app` folder:
 
 ```
 cd app
@@ -57,7 +57,7 @@ npm install
 
 ## Tests
 
-All the tests are placed in the folde `tests`. To run all tests type:
+All the tests are placed in the folder `tests`. To run all tests type:
 
 ```
 truffle test
@@ -65,7 +65,7 @@ truffle test
 
 ## Run Project
 
-First we need to migrate the contract:
+Make sure Ganache is up and running and migrate the contracts:
 
 ```
 truffle migrate
@@ -78,13 +78,13 @@ cd app
 npm run serve
 ```
 
-Next open the MetaMask extension and then click "Restore from seed phrase" and use the seed phrase displayed in ganache. Connect MetaMask to ganache. Make sure to have at least 3 accounts available (if you only have one, click "Create Account" on MetaMask and add more accounts). The first account is the owner of the multisig and the marketplace admin. Second and third accounts are already registered as stores owners to facilidate and ease demonstration.
+Next open the MetaMask extension and then click "Restore from seed phrase" and use the seed phrase displayed in Ganache. Connect MetaMask's network to Ganache. Make sure to have at least 3 accounts available (if you only have one, click "Create Account" on MetaMask and add more accounts). The first account is the owner of the multisig and the marketplace admin. Second and third accounts are already registered as stores owners to facilidate and ease demonstration.
 
 Note: The migrations file is configured to add new stores after the marketplace deployment to ease testing. To start with an empty marketplace you can simply remove the stores adition in file `2_initial_migration.js`.
 
 ## Docs
 
-All the required documentation are located at the folder `docs`.
+All the required documentation is located at the folder `docs`.
 
 ## Roles
 
