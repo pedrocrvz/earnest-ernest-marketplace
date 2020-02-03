@@ -60,11 +60,11 @@ contract('Store', ([owner, holder1, holder2, holder3]) => {
   describe('Add product to store and test getters', () => {
     it('should add a product to the store', async () => {
       const _product = await store.addProduct('test_product', 'this is a test product', 1000000000, 300)
-      productId = _product.logs[0].args._id
-      assert.equal(_product.logs[0].args._name, 'test_product')
-      assert.equal(_product.logs[0].args._description, 'this is a test product')
-      expect(_product.logs[0].args._price).to.be.bignumber.equal(new BN(1000000000))
-      expect(_product.logs[0].args._quantity).to.be.bignumber.equal(new BN(300))
+      productId = _product.logs[0].args.id
+      assert.equal(_product.logs[0].args.name, 'test_product')
+      assert.equal(_product.logs[0].args.description, 'this is a test product')
+      expect(_product.logs[0].args.price).to.be.bignumber.equal(new BN(1000000000))
+      expect(_product.logs[0].args.quantity).to.be.bignumber.equal(new BN(300))
     })
     it('should revert when trying to add a product by a non store owner address', async () => {
       try {

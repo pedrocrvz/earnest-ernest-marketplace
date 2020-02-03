@@ -98,7 +98,7 @@ export default {
     async init() {
       try {
         this.products = []
-        this.storeId = await Marketplace.methods.storesByOwner(this.currentAddress).call()
+        this.storeId = await Marketplace.methods.getStoresByOwner(this.currentAddress).call()
 
         const storeDetails = await Marketplace.methods.getStore(this.storeId).call()
         this.store = {
@@ -128,25 +128,21 @@ export default {
         if (this.updateProduct.name !== undefined) {
           await Store.methods.updateProductName(this.productId, this.updateProduct.name).send({
             from: this.currentAddress,
-            gas: 300000,
           })
         }
         if (this.updateProduct.description !== undefined) {
           await Store.methods.updateProductDescription(this.productId, this.updateProduct.description).send({
             from: this.currentAddress,
-            gas: 300000,
           })
         }
         if (this.updateProduct.quantity !== undefined) {
           await Store.methods.updateProductQuantity(this.productId, this.updateProduct.quantity).send({
             from: this.currentAddress,
-            gas: 300000,
           })
         }
         if (this.updateProduct.price !== undefined) {
           await Store.methods.updateProductPrice(this.productId, this.updateProduct.price).send({
             from: this.currentAddress,
-            gas: 300000,
           })
         }
 

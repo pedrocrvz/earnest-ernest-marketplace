@@ -38,12 +38,6 @@ contract('Store', ([owner, storeOwner1, storeOwner2, holder3]) => {
 
     //link proxy to marketplace
     marketplace = await Marketplace.at(marketplaceProxy.address)
-
-    //initialize store
-    store = await Store.new(marketplace.address, owner)
-    console.log('\t : ----------------------------------')
-    console.log(`\t : Store at address ${store.address}`)
-    console.log('\t : ----------------------------------\n')
   })
 
   describe('Check if marketplace setup is correct', () => {
@@ -56,7 +50,7 @@ contract('Store', ([owner, storeOwner1, storeOwner2, holder3]) => {
   describe('Add a new store', () => {
     it('should revert when adding a new store and sender is not multisig', async () => {
       try {
-        await marketplace.addStore('Blues Store', 'Music store', storeOwner1)
+        await marketplace.addStore('Blues Store', 'Music store', owner)
       } catch (error) {
         assert.ok(error.toString().search('revert') > 0, 'transaction reverted')
       }
@@ -65,7 +59,7 @@ contract('Store', ([owner, storeOwner1, storeOwner2, holder3]) => {
       const dataCreateStore = await encodeCall(
         'addStore',
         ['string', 'string', 'address'],
-        ['Blues Store', 'Music store', storeOwner1],
+        ['Blues Store', 'Music store', owner],
       )
       await multisig.submitTransaction(marketplace.address, 0, dataCreateStore, {
         from: owner,
@@ -74,14 +68,50 @@ contract('Store', ([owner, storeOwner1, storeOwner2, holder3]) => {
     it('should get the stores addresses', async () => {
       const _storesAddresses = await marketplace.getStoresAddresses()
       storeId = _storesAddresses[0]
+      //initialize store
+      store = await Store.at(storeId)
       assert.equal(_storesAddresses.length, 1)
     })
     it('should get the store by addess/id', async () => {
       const _store = await marketplace.getStore(storeId)
       assert.equal(_store[0], 'Blues Store')
       assert.equal(_store[1], 'Music store')
-      assert.equal(_store[2], storeOwner1)
+      assert.equal(_store[2], owner)
       assert.equal(_store[3], false)
+    })
+  })
+
+  describe('Request to open a new store', () => {
+    it('should revert when adding a new store and sender is not multisig', async () => {
+        await marketplace.requestNewStore('Yeam Store', 'Paper store', storeOwner1)
+        const _request = await marketplace.getStoreRequest(storeOwner1)
+        assert.equal(_request[0], 'Yeam Store')
+        assert.equal(_request[1], 'Paper store')
+    })
+    it('should revert when adding another store request from the same owner', async () => {
+      try {
+        await marketplace.requestNewStore('Yeam Store', 'Paper store', storeOwner1)
+      } catch (error) {
+        assert.ok(error.toString().search('revert') > 0, 'transaction reverted')
+      }
+    })
+    it('should create the requested store', async () => {
+      const _storesBefore = await marketplace.getStoresAddresses()
+      const dataCreateStore = await encodeCall(
+        'addStore',
+        ['string', 'string', 'address'],
+        ['Yeam Store', 'Paper store', storeOwner1],
+      )
+      await multisig.submitTransaction(marketplace.address, 0, dataCreateStore, {
+        from: owner,
+      })
+      const _storesAfter = await marketplace.getStoresAddresses()
+      assert.isTrue(_storesAfter.length > _storesBefore.length)
+    })
+    it('should not have any request', async () => {
+      const _request = await marketplace.getStoreRequest(storeOwner1)
+        assert.equal(_request[0], '')
+        assert.equal(_request[1], '')
     })
   })
 
@@ -103,7 +133,7 @@ contract('Store', ([owner, storeOwner1, storeOwner2, holder3]) => {
     })
     it('should revert when adding a product to the store', async () => {
       try {
-        const _product = await store.addProduct('test_product', 'this is a test product', 1000000000, 300)
+        await store.addProduct('test_product', 'this is a test product', 1000000000, 300)
       } catch (error) {
         assert.ok(error.toString().search('revert') > 0, 'transaction reverted')
       }
@@ -116,13 +146,111 @@ contract('Store', ([owner, storeOwner1, storeOwner2, holder3]) => {
       const isBanned = await marketplace.isBanned(storeId)
       assert.equal(isBanned, false)
     })
-    it('should revert when adding a product to the store', async () => {
+    it('should add a product to the store', async () => {
       const _product = await store.addProduct('test_product', 'this is a test product', 1000000000, 300)
-      productId = _product.logs[0].args._id
-      assert.equal(_product.logs[0].args._name, 'test_product')
-      assert.equal(_product.logs[0].args._description, 'this is a test product')
-      expect(_product.logs[0].args._price).to.be.bignumber.equal(new BN(1000000000))
-      expect(_product.logs[0].args._quantity).to.be.bignumber.equal(new BN(300))
+      productId = _product.logs[0].args.id
+      assert.equal(_product.logs[0].args.name, 'test_product')
+      assert.equal(_product.logs[0].args.description, 'this is a test product')
+      expect(_product.logs[0].args.price).to.be.bignumber.equal(new BN(1000000000))
+      expect(_product.logs[0].args.quantity).to.be.bignumber.equal(new BN(300))
     })
   })
+
+  describe('Pause store', () => {
+    it('should pause store', async () => {
+      const dataCreateStore = await encodeCall(
+        'pause',
+        [],
+        [],
+      )
+      await multisig.submitTransaction(marketplace.address, 0, dataCreateStore, {
+        from: owner,
+      })
+      const _paused = await marketplace.paused()
+      assert.isTrue(_paused)
+    })
+    it('should revert when adding a product to the store', async () => {
+      try {
+        await store.addProduct('test_product', 'this is a test product', 1000000000, 300)
+      } catch (error) {
+        assert.ok(error.toString().search('revert') > 0, 'transaction reverted')
+      }
+    })
+    it('should unpause store', async () => {
+      const dataCreateStore = await encodeCall(
+        'unpause',
+        [],
+        [],
+      )
+      await multisig.submitTransaction(marketplace.address, 0, dataCreateStore, {
+        from: owner,
+      })
+      const _paused = await marketplace.paused()
+      assert.isTrue(!_paused)
+    })
+    it('should add a product to the store', async () => {
+      const _product = await store.addProduct('test_product', 'this is a test product', 1000000000, 300)
+      productId = _product.logs[0].args.id
+      assert.equal(_product.logs[0].args.name, 'test_product')
+      assert.equal(_product.logs[0].args.description, 'this is a test product')
+      expect(_product.logs[0].args.price).to.be.bignumber.equal(new BN(1000000000))
+      expect(_product.logs[0].args.quantity).to.be.bignumber.equal(new BN(300))
+    })
+  })
+
+  describe('Destroy store', () => {
+    it('should revert when sender is not store owner', async () => {
+      try {
+        await store.destroy({ from:storeOwner1 })
+      } catch (error) {
+        assert.ok(error.toString().search('revert') > 0, 'transaction reverted')
+      }
+    })
+    it('should destroy store', async () => {
+      await store.destroy()
+    })
+    it('should revert when adding a product to the store', async () => {
+      try {
+        await store.addProduct('test_product', 'this is a test product', 1000000000, 300)
+      } catch (error) {
+        assert.ok(error.toString().search('revert') > 0, 'transaction reverted')
+      }
+    })
+  })
+
+  describe('Destroy marketplace', () => {
+    it('should revert when sender is not a marketplace admin', async () => {
+      try {
+        await marketplace.destroy(multisig.address)
+      } catch (error) {
+        assert.ok(error.toString().search('revert') > 0, 'transaction reverted')
+      }
+    })
+    it('should destroy marketplace', async () => {
+      const dataCreateStore = await encodeCall(
+        'destroy',
+        ['address'],
+        [multisig.address],
+      )
+      await multisig.submitTransaction(marketplace.address, 0, dataCreateStore, {
+        from: owner,
+      })
+    })
+    it('should return an error when getting store pause status', async () => {
+      try {
+        await marketplace.paused()
+      } catch (error) {
+        assert.ok(error.toString().search('Out of Gas') > 0, 'transaction reverted')
+      }
+    })
+    it('should revert when adding a product to the store', async () => {
+      try {
+        await store.addProduct('test_product', 'this is a test product', 1000000000, 300)
+      } catch (error) {
+        assert.ok(error.toString().search('revert') > 0, 'transaction reverted')
+      }
+    })
+  })
+
+
 })

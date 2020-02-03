@@ -1,0 +1,19 @@
+Network: Rinkeby
+Sender address: 0xAd2218ED288Fa5540Cf33cD5E5783637A39e6feb
+
+Deployed Contracts:
+    - Migrations.sol: 
+        - Contract at 0xac98E6C137BB715aC30Cf70FCA9050a50e8bB1d4
+        - Etherscan tx: https://rinkeby.etherscan.io/tx/0x16ceeaa779d032a1066e34a824676db10765cdb49865f4772cad6ec25b2b9430
+
+    - MultiSigWallet.sol: 
+        - Contract at 0xB71026C1Acf4a6Ddf4C7A7872CEE040aab9a96a4
+        - Etherscan tx: https://rinkeby.etherscan.io/tx/0x4452799171017b035a938a83010aaed9e30b5d09838b7cfb95902c68b3502a15
+
+    - Marketplace.sol: 
+        - Contract at 0x6fE48f55F9Ff92b1064f173f012d15A5B0711Cc6
+        - Etherscan tx: https://rinkeby.etherscan.io/tx/0x3d803059ec8413f058e9559ad316df2c98f830a380cb433a3942c0a2b54acc0e
+
+    - AdminUpgradeabilityProxy.sol: 
+        - Contract at 0x018825aA84088F88357b918930541c9688DED8dF
+        - Etherscan tx: https://rinkeby.etherscan.io/tx/0xa6d1d799ba07cc208949a76344a93f8cc21f4566b21e8e9557e46123945b1ae7

@@ -3,12 +3,21 @@
     <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
       <!-- Card stats -->
       <div class="row">
-        <div class="col-xl-12">
+        <div class="col-xl-8">
           <stats-card>
             <h2 class="mb-0">{{ store.name }}</h2>
             <h4 class="mb-0">{{ store.description }}</h4>
             <template slot="footer">
-              <span class="text-nowrap"> <i class="ni ni-money-coins"></i> &nbsp; {{ storeBalance }} </span>
+              <span class="text-nowrap">Store </span>
+            </template>
+          </stats-card>
+        </div>
+        <div class="col-xl-4">
+          <stats-card>
+            <h2 class="mb-0">Balance: {{ storeBalance }} ETH</h2>
+            <h4 class="mb-0">{{ store.description }}</h4>
+            <template slot="footer">
+              <base-button size="sm" type="primary" @click="withdraw">Withdraw</base-button>
             </template>
           </stats-card>
         </div>
@@ -20,7 +29,7 @@
         <div class="col">
           <div class="card shadow">
             <div class="card-header bg-transparent">
-              <h3 class="mb-0">Admin Features</h3>
+              <h3 class="mb-0">Store Admin Features</h3>
             </div>
             <div class="card-body">
               <div class="row icon-examples">
@@ -117,37 +126,95 @@
                   <h3 class="mb-0">No Products</h3>
                 </div>
                 <div v-else class="col-lg-12 col-md-6" v-for="(product, index) in products" :key="index">
-                  <router-link
-                    :to="{
-                      name: 'update-product',
-                      params: { id: product.id },
-                    }"
-                    class="text-light"
+                  <button
+                    @click=";(updateProduct = product), (showUpdateProductModal = true)"
+                    type="button"
+                    class="btn-icon-clipboard"
                   >
-                    <button type="button" class="btn-icon-clipboard">
-                      <div>
-                        <i :class="product.name"></i>
-                        <span
-                          ><b
-                            ><h3 class="mb-0">{{ product.name }}</h3></b
-                          ></span
-                        >
-                      </div>
-                      <div>
-                        <span>Description: {{ product.description }}</span>
-                      </div>
-                      <div>
-                        <span>Price: {{ product.price }} Ether</span>
-                        <span>Stock: {{ product.quantity }}</span>
-                      </div>
-                    </button>
-                  </router-link>
+                    <div>
+                      <i :class="product.name"></i>
+                      <span
+                        ><b
+                          ><h3 class="mb-0">{{ product.name }}</h3></b
+                        ></span
+                      >
+                    </div>
+                    <div>
+                      <span>Description: {{ product.description }}</span>
+                    </div>
+                    <div>
+                      <span>Price: {{ product.price }} Ether</span>
+                      <span>Stock: {{ product.quantity }}</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row icon-examples">
+                <div class="col-lg-12 col-md-4 card bg-secondary shadow border-0">
+                  <div class="text-center">
+                    <base-button type="danger" @click="destroy" class="my-4">Destroy Store</base-button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="col-md-4">
+      <modal :show.sync="showUpdateProductModal" body-classes="p-0" modal-classes="modal-dialog-centered modal-sm">
+        <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-5" class="border-0">
+          <template v-if="!productUpdated">
+            <div class="text-center text-muted mb-4">
+              <h2 class="mb-0">Update Product</h2>
+              <h3 class="mb-0">You can update only one field</h3>
+            </div>
+
+            <form role="form" v-if="!productUpdated">
+              <div class="text-center text-muted mb-4">
+                {{ updateProduct.name }}
+              </div>
+              <base-input class="input-group-alternative mb-3" placeholder="Product Name" v-model="updateProduct.name">
+              </base-input>
+              <base-input
+                class="input-group-alternative mb-3"
+                placeholder="Product Description"
+                v-model="updateProduct.description"
+              >
+              </base-input>
+              <base-input
+                class="input-group-alternative mb-3"
+                placeholder="Product Price"
+                v-model="updateProduct.price"
+              >
+              </base-input>
+              <base-input
+                class="input-group-alternative mb-3"
+                placeholder="Product Quantity"
+                v-model="updateProduct.quantity"
+              >
+              </base-input>
+              <div class="text-center">
+                <base-button type="primary" @click="updateProductDetails" class="my-4">Update</base-button>
+              </div>
+            </form>
+          </template>
+          <div v-else class="text-center text-muted mb-4">
+            <h3 class="mb-0">Product Updated!</h3>
+            <base-button
+              type="primary"
+              @click="
+                productUpdated = false
+                showUpdateProductModal = false
+              "
+              class="my-4"
+              >Ok</base-button
+            >
+          </div>
+        </card>
+      </modal>
     </div>
   </div>
 </template>
@@ -164,6 +231,7 @@ export default {
     newProduct: {},
     updateProduct: {},
     productUpdated: false,
+    showUpdateProductModal: false,
   }),
   created() {
     this.storeId = this.$route.params.id
@@ -184,6 +252,8 @@ export default {
     async init() {
       try {
         this.products = []
+
+        this.storeBalance = web3.utils.fromWei(await web3.eth.getBalance(this.storeId), 'ether')
         const storeDetails = await Marketplace.methods.getStore(this.storeId).call()
         this.store = {
           id: this.storeId,
@@ -231,7 +301,6 @@ export default {
           )
           .send({
             from: this.currentAddress,
-            gas: 300000,
           })
         this.newProduct = {}
         this.init()
@@ -243,8 +312,57 @@ export default {
       try {
         await Store.methods.deleteProduct(productId).send({
           from: this.currentAddress,
-          gas: 500000,
         })
+        this.init()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async withdraw() {
+      try {
+        await Store.methods.withdraw().send({
+          from: this.currentAddress,
+        })
+        this.init()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async destroy() {
+      try {
+        await Store.methods.destroy().send({
+          from: this.currentAddress,
+        })
+        this.init()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async updateProductDetails() {
+      try {
+        if (this.updateProduct.name !== undefined) {
+          await Store.methods.updateProductName(this.productId, this.updateProduct.name).send({
+            from: this.currentAddress,
+          })
+        }
+        if (this.updateProduct.description !== undefined) {
+          await Store.methods.updateProductDescription(this.productId, this.updateProduct.description).send({
+            from: this.currentAddress,
+          })
+        }
+        if (this.updateProduct.quantity !== undefined) {
+          await Store.methods.updateProductQuantity(this.productId, this.updateProduct.quantity).send({
+            from: this.currentAddress,
+          })
+        }
+        if (this.updateProduct.price !== undefined) {
+          await Store.methods.updateProductPrice(this.productId, this.updateProduct.price).send({
+            from: this.currentAddress,
+          })
+        }
+
+        this.updateProduct = {}
+        this.productUpdated = true
         this.init()
       } catch (error) {
         console.log(error)

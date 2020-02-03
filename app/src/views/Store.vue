@@ -7,9 +7,6 @@
           <stats-card>
             <h2 class="mb-0">{{ store.name }}</h2>
             <h4 class="mb-0">{{ store.description }}</h4>
-            <template slot="footer">
-              <span class="text-nowrap">Store</span>
-            </template>
           </stats-card>
         </div>
       </div>

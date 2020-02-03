@@ -1,21 +1,17 @@
 const AdminProxy = artifacts.require('./AdminUpgradeabilityProxy.sol')
 const Marketplace = artifacts.require('./Marketplace.sol')
-const MarketplaceV2 = artifacts.require('./test/MarketplaceV2.sol')
 const Store = artifacts.require('./Store.sol')
 const MultiSigWallet = artifacts.require('./MultiSigWallet.sol')
 const encodeCall = require('../test/helpers/encodeCall')
 const fs = require('fs')
 
 async function init(deployer, [owner, storeOwner1, storeOwner2, storeOwner3]) {
-  console.log('Initial migration of the marketplace contracts')
+
   // deploy MultiSig Wallet
   const multisig = await deployer.deploy(MultiSigWallet, [owner], 1)
 
   // deploy marketplace implementation
   const marketplaceImpl = await deployer.deploy(Marketplace)
-
-  // deploy marketplaceV2 implementation
-  await deployer.deploy(MarketplaceV2)
 
   const initializeData = await encodeCall('initialize', ['address'], [multisig.address])
 

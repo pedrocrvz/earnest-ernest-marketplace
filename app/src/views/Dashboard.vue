@@ -51,14 +51,31 @@
                     }"
                     class="text-light"
                   >
-                    <button
+                    <base-button
+                      v-if="store.isBanned"
+                      type="button"
+                      :title="store.name"
+                      class="btn-icon-clipboard"
+                      data-clipboard-text="air-baloon"
+                      disabled
+                    >
+                      <div>
+                        <span
+                          ><b>{{ store.name }} - BANNED</b></span
+                        >
+                      </div>
+                      <div>
+                        <span>{{ store.description }}</span>
+                      </div>
+                    </base-button>
+                    <base-button
+                      v-else
                       type="button"
                       :title="store.name"
                       class="btn-icon-clipboard"
                       data-clipboard-text="air-baloon"
                     >
                       <div>
-                        <i :class="store.name"></i>
                         <span
                           ><b>{{ store.name }}</b></span
                         >
@@ -66,7 +83,7 @@
                       <div>
                         <span>{{ store.description }}</span>
                       </div>
-                    </button>
+                    </base-button>
                   </router-link>
                 </div>
               </div>
@@ -110,6 +127,7 @@ export default {
       this.isStoreOwner = await Marketplace.methods.isStoreOwner(this.currentAddress).call()
     },
     async init() {
+      this.stores = []
       this.currentAddress = web3.givenProvider.selectedAddress
       this.checkIfAdmin()
       this.checkIfStoreOwner()

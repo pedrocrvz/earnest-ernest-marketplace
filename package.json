@@ -1,9 +1,9 @@
 {
   "name": "earnest-ernest-marketplace",
   "version": "1.0.0",
-  "description": "",
+  "description": "Decentralized marketplace",
   "author": "Pedro Cruz <pedrocrvz@gmail.com>",
-  "license": "Apache 2.0",
+  "license": "ISC",
   "main": "truffle-config.js",
   "directories": {
     "test": "test"
@@ -21,7 +21,6 @@
     "format": "npm run format:sol & npm run format:js"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^2.4.0",
     "@openzeppelin/contracts-ethereum-package": "^2.4.0",
     "@openzeppelin/upgrades": "^2.6.0",
     "chai": "^4.2.0",
@@ -31,6 +30,7 @@
   },
   "devDependencies": {
     "prettier": "^1.19.1",
-    "prettier-plugin-solidity": "^1.0.0-alpha.36"
+    "prettier-plugin-solidity": "^1.0.0-alpha.36",
+    "truffle-hdwallet-provider": "^1.0.17"
   }
 }

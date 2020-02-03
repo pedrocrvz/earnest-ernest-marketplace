@@ -114,7 +114,6 @@ export default {
           .requestNewStore(this.storeRequest.name, this.storeRequest.description, this.currentAddress)
           .send({
             from: this.currentAddress,
-            gas: 300000,
           })
         this.requested = true
       } catch (error) {
