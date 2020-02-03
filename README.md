@@ -16,6 +16,8 @@ Once you have Node.js, truffle, ganache and Metamask installed in your system, f
 
 Clone Earnest Ernest Marketplace's repository:
 
+### Contracts
+
 ```
 git clone https://github.com/pedrocrvz/earnest-ernest-marketplace.git
 cd earnest-ernest-marketplace
@@ -39,6 +41,20 @@ Compile contracts:
 truffle compile
 ```
 
+### App
+
+Naviagte to folder `app`:
+
+```
+cd app
+```
+
+Install dependencies:
+
+```
+npm install
+```
+
 ## Tests
 
 All the tests are placed in the folde `tests`. To run all tests type:
@@ -59,7 +75,7 @@ Then we need to initiate our app to serve as a GUI to interact with the contract
 
 ```
 cd app
-npm run start
+npm run serve
 ```
 
 Note: The migrations file is configured to add new stores after the marketplace deployment to ease testing. To start with an empty marketplace you can simply remove the stores adition in file `2_initial_migration.js`.
