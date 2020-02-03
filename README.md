@@ -92,16 +92,16 @@ All the required documentation are located at the folder `docs`.
 
 The marketplace is controlled by a multisig wallet. The owners of the multisig wallet are the admins of the marketplace. Admins can create/ban/remove stores.
 
-<center><img src="docs/img/admin.png " alt="adminview" width="700"/></center>
+<img src="docs/img/admin.png " alt="adminview" width="1000"/>
 
 ### Shoppers/Users
 
 Users can buy products or request to open a new store.
 
-<center><img src="docs/img/dashboard.png " alt="dashboard" width="700"/></center>
+<img src="docs/img/dashboard.png " alt="dashboard" width="1000"/>
 
 ### Store Owners
 
 Store owners can create/update/remove products, withdraw the store balance to their account and destroy the store.
 
-<center><img src="docs/img/storeowner.png " alt="storeowner" width="700"/></center>
+<img src="docs/img/storeowner.png " alt="storeowner" width="1000"/>
