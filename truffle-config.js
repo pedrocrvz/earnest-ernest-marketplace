@@ -17,13 +17,12 @@
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
+require('dotenv').config()
 
-// const HDWalletProvider = require('truffle-hdwallet-provider');
-// const infuraKey = "fj4jll3k.....";
-//
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
 const HDWalletProvider = require("truffle-hdwallet-provider");
+const mnemonic = process.env.MNEMONIC;
+const infuraKey = process.env.INFURA_KEY;
+
 module.exports = {
   /**
    * Networks define how you connect to your ethereum client and let you set the
@@ -51,7 +50,7 @@ module.exports = {
     },
     rinkeby: {
       provider: function() {
-        return new HDWalletProvider('able palm cattle lend master offer insect camera network husband miss bless', "https://rinkeby.infura.io/v3/df5102f60dc448298dd8f18c32616a78")
+        return new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`)
       },
       network_id: 4,
     }, 
